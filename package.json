@@ -1,6 +1,6 @@
 {
   "name": "@striderlabs/mcp-target",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "MCP server connector for Target retail shopping — search products, manage cart, track orders",
   "main": "dist/index.js",
   "bin": {
@@ -12,10 +12,19 @@
     "start": "node dist/index.js",
     "prepare": "npm run build"
   },
-  "keywords": ["mcp", "target", "shopping", "retail", "automation"],
+  "keywords": [
+    "mcp",
+    "target",
+    "shopping",
+    "retail",
+    "automation"
+  ],
   "author": "Strider Labs",
   "license": "MIT",
-  "files": ["dist/", "README.md"],
+  "files": [
+    "dist/",
+    "README.md"
+  ],
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.27.1",
     "playwright": "^1.52.0",
