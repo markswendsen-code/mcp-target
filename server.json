@@ -1,27 +1,22 @@
 {
-  "mcpName": "io.github.markswendsen-code/target",
-  "name": "@striderlabs/mcp-target",
+  "name": "io.github.markswendsen-code/target",
   "version": "0.1.0",
-  "description": "MCP server connector for Target retail shopping — search products, manage cart, track orders via browser automation",
-  "transport": "stdio",
-  "command": "npx",
-  "args": ["@striderlabs/mcp-target"],
-  "tools": [
-    "status",
-    "login",
-    "logout",
-    "search_products",
-    "get_product",
-    "check_store_availability",
-    "add_to_cart",
-    "view_cart",
-    "clear_cart",
-    "checkout",
-    "get_orders",
-    "track_order"
-  ],
-  "repository": "https://github.com/markswendsen-code/mcp-target",
+  "description": "MCP server connector for Target retail shopping \u2014 search products, manage cart, track orders via...",
+  "repository": {
+    "url": "https://github.com/markswendsen-code/mcp-target",
+    "source": "github"
+  },
   "npm": "https://www.npmjs.com/package/@striderlabs/mcp-target",
   "author": "Strider Labs",
-  "license": "MIT"
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "packages": [
+    {
+      "registryType": "npm",
+      "identifier": "@striderlabs/mcp-target",
+      "version": "0.1.0",
+      "transport": {
+        "type": "stdio"
+      }
+    }
+  ]
 }
