@@ -105,15 +105,49 @@ export async function withPage<T>(
   fn: (page: Page) => Promise<T>,
   headless = true
 ): Promise<T> {
-  const ctx = await getBrowserContext(headless);
-  const page = await ctx.newPage();
-  await page.addInitScript(STEALTH_INIT_SCRIPT);
+  // Eagerly reset a disconnected browser singleton before trying to use it.
+  // Without this, a crashed browser leaves contextInstance non-null and every
+  // subsequent call fails with "browserContext.newPage: Target page, context or
+  // browser has been closed" until the process is restarted.
+  if (browserInstance && !browserInstance.isConnected()) {
+    contextInstance = null;
+    browserInstance = null;
+  }
+
+  let page: Page | undefined;
   try {
+    // Keep all browser setup inside the try block so that errors here
+    // (e.g. "has been closed") are caught and the stale singleton is reset,
+    // rather than leaking a dead contextInstance to the next caller.
+    const ctx = await getBrowserContext(headless);
+    page = await ctx.newPage();
+    await page.addInitScript(STEALTH_INIT_SCRIPT);
     const result = await fn(page);
     await saveSessionCookies();
     return result;
+  } catch (err) {
+    // If the browser or context died mid-call, clear the singleton so the
+    // next call gets a fresh browser instead of hitting the same dead instance.
+    const msg = err instanceof Error ? err.message : String(err);
+    if (
+      msg.includes("has been closed") ||
+      msg.includes("Target closed") ||
+      msg.includes("Session closed") ||
+      msg.includes("Page crashed") ||
+      msg.includes("crashed")
+    ) {
+      contextInstance = null;
+      browserInstance = null;
+    }
+    throw err;
   } finally {
-    await page.close();
+    if (page) {
+      try {
+        await page.close();
+      } catch {
+        // ignore — page may already be closed if the browser crashed
+      }
+    }
   }
 }
 
