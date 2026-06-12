@@ -408,7 +408,7 @@ async function handleSearchProducts(
     // Wait for product grid
     try {
       await page.waitForSelector(
-        '[data-test="product-list"], [class*="ProductCard"], [data-test="@web/ProductCard"]',
+        '[data-test="product-list"], [class*="ProductCard"], [data-test="@web/ProductCard"], [data-test="@web/ProductCard/ProductCardVariantWrapper"]',
         { timeout: 15000 }
       );
     } catch {
@@ -419,7 +419,7 @@ async function handleSearchProducts(
       ({ minPrice, maxPrice, limit }) => {
         const cards = Array.from(
           document.querySelectorAll(
-            '[data-test="@web/ProductCard"], [data-testid="ProductCard"], article[class*="productCard"]'
+            '[data-test="@web/ProductCard"], [data-test="@web/ProductCard/ProductCardVariantWrapper"], [data-testid="ProductCard"], article[class*="productCard"]'
           )
         );
 
@@ -437,6 +437,7 @@ async function handleSearchProducts(
           if (results.length >= limit) break;
 
           const titleEl =
+            card.querySelector('[data-test="@web/ProductCard/title"]') ||
             card.querySelector('[data-test="product-title"]') ||
             card.querySelector('a[href*="/p/"]');
           const title = titleEl?.textContent?.trim() ?? "";
